@@ -18,6 +18,8 @@ var table = d3.select('#roster')
   .append('table')
   .classed('table',true);
 
+var positions = {G:"Goalkeeper", D:"Defender", M:"Midfielder", F:"Forward"};
+
 /* Append <thead><tr></tr></thead> to the above table.
  * The inner tr element is stored in the "thead" variable.
  */
@@ -33,6 +35,7 @@ var tbody = table.append('tbody');
 var reload = function() {
   d3.tsv('afcw-roster.tsv', function(rows){
     data=rows;
+    data.forEach(d=>d.Pos = positions[d.Pos]);
     redraw();
   });
 };
@@ -43,6 +46,20 @@ var reload = function() {
  */
 var redraw = function() {
   console.log("redraw() called.");
+  thead.selectAll("th")
+    .data(d3.map(data[0]).keys().slice(2))
+    .enter()
+    .append("th")
+    .text(function(d) {return d;});
+
+    var rows = tbody.selectAll("tr")
+      .data(data);
+    rows.enter().append("tr");
+    rows.exit().remove();
+    var cells = rows.selectAll("td")
+      .data(row=>d3.map(row).values().slice(2));
+    cells.enter().append("td");
+    cells.text(d=>d);
 };
 
 /* Call reload() once the page and script have loaded to get the controller script started. */
