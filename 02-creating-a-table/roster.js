@@ -31,8 +31,10 @@ var tbody = table.append('tbody');
  * We'll be filling this in during the lesson.
  */
 var reload = function() {
-  console.log("reload() called.");
-  redraw();
+  d3.tsv('afcw-roster.tsv', function(rows){
+    data=rows;
+    redraw();
+  });
 };
 
 /* Function to redraw the table.
@@ -45,4 +47,3 @@ var redraw = function() {
 
 /* Call reload() once the page and script have loaded to get the controller script started. */
 reload();
-
